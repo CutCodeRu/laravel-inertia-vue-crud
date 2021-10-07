@@ -9,9 +9,9 @@
         </div>
     </header>
 
-    <a href="#" class="text-indigo-600 hover:text-indigo-900 my-5 block">
+    <Link :href="route('users.create')" class="text-indigo-600 hover:text-indigo-900 my-5 block">
         Добавить пользователя
-    </a>
+    </Link>
 
     <div class="flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -41,17 +41,17 @@
 
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm font-medium text-gray-900">
-                                    {{ user.name }}
+                                    {{ user.email }}
                                 </div>
                             </td>
 
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-end items-center space-x-3">
-                                <a
+                                <Link
                                     class="text-indigo-600 hover:text-indigo-900"
-                                    href="#"
-                                >Редактировать</a>
+                                    :href="route('users.edit', user.id)"
+                                >Редактировать</Link>
 
-                                <a class="text-red-600 hover:text-red-900 cursor-pointer"
+                                <a @click="destroy(user.id)" class="text-red-600 hover:text-red-900 cursor-pointer"
                                 >Удалить</a>
                             </td>
                         </tr>
@@ -70,17 +70,25 @@
 </template>
 
 <script>
-import {Head} from '@inertiajs/inertia-vue3'
+import {Head, Link} from '@inertiajs/inertia-vue3'
 import Pagination from '../../Shared/Pagination'
 
 export default {
     components: {
         Head,
+        Link,
         Pagination,
     },
     props: {
         title: String,
         users: Array,
     },
+    methods: {
+        destroy(id) {
+            if(confirm('Вы уверенны?')) {
+                this.$inertia.delete(this.route('users.destroy', id))
+            }
+        }
+    }
 }
 </script>
