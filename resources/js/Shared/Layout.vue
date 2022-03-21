@@ -20,6 +20,14 @@
         </div>
     </nav>
 
+    <div v-if="$page.props.user">
+        {{ $page.props.user.email }}
+
+        <div>
+            <a @click="logout">Выйти</a>
+        </div>
+    </div>
+
     <div class="container mx-auto">
         <div class="my-10">
             <slot />
@@ -39,7 +47,10 @@ export default {
     }),
     methods: {
         isActive(route) {
-            return this.route().current() == route || this.route().current().includes(route);
+            return this.route().current() === route || this.route().current().includes(route);
+        },
+        logout() {
+            this.$inertia.delete(route('logout'))
         }
     }
 };

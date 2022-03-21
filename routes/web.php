@@ -1,19 +1,26 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\IndexController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
-Route::get('/', [\App\Http\Controllers\IndexController::class, 'index'])->name('home');
-Route::get('/about', [\App\Http\Controllers\IndexController::class, 'about'])->name('about');
 
-Route::resource('users', \App\Http\Controllers\UserController::class);
+Route::middleware('auth')
+    ->group(function () {
+
+        Route::get('/', [IndexController::class, 'index'])->name('home');
+        Route::get('/about', [IndexController::class, 'about'])->name('about');
+
+        Route::resource('users', UserController::class);
+});
+
+Route::controller(AuthController::class)
+    ->group(function () {
+    Route::post('/login', 'login')->name('login')->middleware('guest');
+    Route::delete('/logout', 'logout')->name('logout')->middleware('auth');
+});
+
+
+Route::inertia('/login', 'Login');
